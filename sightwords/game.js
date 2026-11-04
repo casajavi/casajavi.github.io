@@ -1,4 +1,4 @@
-const WORDS = ["he", "be", "I", "as", "at", "are"];
+const WORDS = ["and", "he", "be", "I", "as", "at", "are"];
 
 function wordSlug(word) {
   return word === "I" ? "i" : word;
@@ -282,7 +282,7 @@ function renderStart() {
   renderCassy(els.startCassy, "wave");
   syncFunLayer();
   const totalStars = WORDS.reduce((sum, word) => sum + state.stars[word], 0);
-  els.startStats.textContent = `Best streak ${state.best}  •  ${state.coins} coins  •  ${totalStars}/18 stars`;
+  els.startStats.textContent = `Best streak ${state.best}  •  ${state.coins} coins  •  ${totalStars}/${WORDS.length * 3} stars`;
 }
 
 function nextRound(first = false) {
@@ -413,7 +413,7 @@ function handleCorrect() {
     showOverlay({
       kicker: "Word world complete",
       title: "Cassy knows them all!",
-      body: `he, be, I, as, at, and are. Best streak: ${state.best}. Keep playing for more toys!`,
+      body: `${WORDS.join(", ")}. Best streak: ${state.best}. Keep playing for more toys!`,
     });
     speak(`Yes, Cassy! That says ${state.target}.`).then(() => speak("Cassy knows all her words!"));
     return;
