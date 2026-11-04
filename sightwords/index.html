@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#1ea7ff" />
+    <title>Cassy's Word World</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Arimo:wght@500;600;700&family=Fredoka:wght@500;600;700;800&family=Nunito:wght@700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="sky" aria-hidden="true">
+      <div class="cloud c1"></div>
+      <div class="cloud c2"></div>
+      <div class="cloud c3"></div>
+      <div class="stud-ground"></div>
+    </div>
+
+    <div id="particles" class="particles" aria-hidden="true"></div>
+    <div id="fun-layer" class="fun-layer hidden" aria-hidden="true">
+      <div class="sky-dragon-path">
+        <button class="sky-dragon" type="button" aria-label="Dragon">
+          <span class="dragon-wing left"></span>
+          <span class="dragon-wing right"></span>
+          <span class="dragon-head">
+            <span class="dragon-horn left"></span>
+            <span class="dragon-horn right"></span>
+            <span class="dragon-eye"></span>
+            <span class="dragon-eye"></span>
+          </span>
+          <span class="dragon-body"></span>
+          <span class="dragon-tail"></span>
+        </button>
+      </div>
+      <div class="butterflies">
+        <div class="bf-path b1">
+          <button class="butterfly pink" type="button" aria-label="Butterfly">
+            <span class="bf-wing left"></span>
+            <span class="bf-body"></span>
+            <span class="bf-wing right"></span>
+          </button>
+        </div>
+        <div class="bf-path b2">
+          <button class="butterfly gold" type="button" aria-label="Butterfly">
+            <span class="bf-wing left"></span>
+            <span class="bf-body"></span>
+            <span class="bf-wing right"></span>
+          </button>
+        </div>
+        <div class="bf-path b3">
+          <button class="butterfly purple" type="button" aria-label="Butterfly">
+            <span class="bf-wing left"></span>
+            <span class="bf-body"></span>
+            <span class="bf-wing right"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <main class="app">
+      <section id="screen-start" class="screen start-screen">
+        <div class="logo-badge">Sight Word Quest</div>
+        <h1>Cassy's<br />Word World</h1>
+        <p class="hello-bubble" id="hello-bubble">Hi Cassy! Let's play with words.</p>
+
+        <div class="hero-row">
+          <div class="avatar-wrap hero-avatar" id="start-cassy"></div>
+        </div>
+
+        <div class="mode-pick" role="group" aria-label="How to play">
+          <button class="mode-card selected" data-mode="see" type="button">
+            <span class="mode-kicker">Best to start</span>
+            <strong>See the word</strong>
+            <span>Cassy sees a word. Tap friends to hear them, then pick the match.</span>
+          </button>
+          <button class="mode-card" data-mode="hear" type="button">
+            <span class="mode-kicker">Next step</span>
+            <strong>Hear the word</strong>
+            <span>Cassy hears a word. Tap the matching printed word.</span>
+          </button>
+        </div>
+
+        <button id="btn-play" class="btn play" type="button">Play</button>
+
+        <div class="start-stats" id="start-stats"></div>
+        <button id="btn-reset" class="text-btn" type="button">Reset progress</button>
+      </section>
+
+      <section id="screen-game" class="screen game-screen hidden">
+        <header class="hud">
+          <button id="btn-home" class="icon-btn" type="button" aria-label="Back home">⌂</button>
+          <div class="stat streak-stat" title="Streak">
+            <span class="streak-flame" id="streak-flame">🔥</span>
+            <span id="streak-count">0</span>
+          </div>
+          <div class="stat coin-stat">
+            <span class="coin-dot" aria-hidden="true"></span>
+            <span id="coin-count">0</span>
+          </div>
+          <div class="stat best-stat">
+            <span>🏆</span>
+            <span id="best-count">0</span>
+          </div>
+        </header>
+
+        <p class="coach" id="coach">Tap a friend to hear a word.</p>
+
+        <div class="stage">
+          <div class="sign-row">
+            <div class="avatar-wrap cassy-side" id="game-cassy"></div>
+            <div class="word-sign" id="word-sign">
+              <button id="btn-replay" class="replay" type="button" aria-label="Hear again">🔊</button>
+              <div class="sign-board">
+                <span id="prompt-word">Are</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="choices" id="choices"></div>
+        </div>
+
+        <div class="mastery" id="mastery"></div>
+      </section>
+    </main>
+
+    <div id="overlay" class="overlay hidden" role="dialog" aria-modal="true">
+      <div class="overlay-card">
+        <div class="avatar-wrap overlay-avatar" id="overlay-cassy"></div>
+        <p class="overlay-kicker" id="overlay-kicker">Streak reward</p>
+        <h2 id="overlay-title">You did it, Cassy!</h2>
+        <p id="overlay-body">Keep going!</p>
+        <button id="btn-overlay" class="btn play" type="button">Keep playing</button>
+      </div>
+    </div>
+
+    <script src="game.js"></script>
+  </body>
+</html>
