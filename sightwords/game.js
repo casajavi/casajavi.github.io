@@ -785,9 +785,11 @@ const speech = {
 
 const voicePlayer = new Audio();
 
+const ASSET_V = "17";
+
 function clipFor(text) {
-  if (WORDS.includes(text)) return `audio/word-${wordSlug(text)}.mp3`;
-  return LINE_CLIPS[text] || null;
+  const src = WORDS.includes(text) ? `audio/word-${wordSlug(text)}.mp3` : LINE_CLIPS[text] || null;
+  return src ? `${src}?v=${ASSET_V}` : null;
 }
 
 function unlockVoice() {
