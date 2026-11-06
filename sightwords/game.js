@@ -323,7 +323,7 @@ function startGame() {
   state.selected = null;
   els.start.classList.add("hidden");
   els.game.classList.remove("hidden");
-  renderCassy(els.gameCassy, "wave");
+  renderCassy(els.gameCassy, "heart");
   updateHud();
   renderMastery();
   const intro =
@@ -345,7 +345,7 @@ function showStart() {
 }
 
 function renderStart() {
-  renderCassy(els.startCassy, "wave");
+  renderCassy(els.startCassy, "heart");
   syncFunLayer();
   const totalStars = WORDS.reduce((sum, word) => sum + state.stars[word], 0);
   els.startStats.textContent = `Best streak ${state.best}  •  ${state.coins} coins  •  ${totalStars}/${WORDS.length * 3} stars`;
@@ -752,8 +752,9 @@ function avatarMarkup(kind, size = "", extra = "") {
       <div class="clip left"></div>
       <div class="clip right"></div>
       <div class="crown"></div>
-      <div class="arm left"></div>
+      <div class="arm left"><span class="hand"></span></div>
       <div class="arm right">
+        <span class="hand"></span>
         <span class="held-toy" aria-label="Snuggly toy">
           <span class="teddy-ear left"></span>
           <span class="teddy-ear right"></span>
@@ -773,6 +774,15 @@ function avatarMarkup(kind, size = "", extra = "") {
         <div class="eye right"></div>
         <div class="mouth"></div>
       </div>
+      <svg class="hand-heart" viewBox="0 0 24 22" aria-hidden="true">
+        <path
+          d="M12 20S4 14.4 4 9.4C4 6.4 6.2 4.2 9 4.2c1.5 0 2.6.8 3 1.8.4-1 1.5-1.8 3-1.8 2.8 0 5 2.2 5 5.2C20 14.4 12 20 12 20z"
+          fill="#fff"
+          stroke="#ff4fa0"
+          stroke-width="2.6"
+          stroke-linejoin="round"
+        />
+      </svg>
     </div>
   `;
 }
@@ -785,7 +795,7 @@ const speech = {
 
 const voicePlayer = new Audio();
 
-const ASSET_V = "17";
+const ASSET_V = "19";
 
 function clipFor(text) {
   const src = WORDS.includes(text) ? `audio/word-${wordSlug(text)}.mp3` : LINE_CLIPS[text] || null;
