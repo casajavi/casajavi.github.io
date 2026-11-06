@@ -12,7 +12,7 @@
       href="https://fonts.googleapis.com/css2?family=Arimo:wght@500;600;700&family=Fredoka:wght@500;600;700;800&family=Nunito:wght@700;800;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=16" />
   </head>
   <body>
     <div class="sky" aria-hidden="true">
@@ -38,6 +38,27 @@
           <span class="dragon-tail"></span>
         </button>
       </div>
+      <div class="shooting-stars" aria-hidden="true">
+        <span class="shooting-star s1"></span>
+        <span class="shooting-star s2"></span>
+        <span class="shooting-star s3"></span>
+      </div>
+      <div class="sky-unicorn-path">
+        <button class="sky-unicorn" type="button" aria-label="Unicorn">
+          <span class="uni-horn"></span>
+          <span class="uni-head"></span>
+          <span class="uni-mane"></span>
+          <span class="uni-body"></span>
+          <span class="uni-leg"></span>
+        </button>
+      </div>
+      <button class="sky-castle" type="button" aria-label="Castle">
+        <span class="castle-keep"></span>
+        <span class="castle-tower left"></span>
+        <span class="castle-tower right"></span>
+        <span class="castle-door"></span>
+        <span class="castle-flag"></span>
+      </button>
       <div class="butterflies">
         <div class="bf-path b1">
           <button class="butterfly pink" type="button" aria-label="Butterfly">
@@ -77,12 +98,12 @@
           <button class="mode-card selected" data-mode="see" type="button">
             <span class="mode-kicker">Best to start</span>
             <strong>See the word</strong>
-            <span>Cassy sees a word. Tap friends to hear them, then pick the match.</span>
+            <span>Cassy sees a word. Tap friends to hear them, then tap That's the one!</span>
           </button>
           <button class="mode-card" data-mode="hear" type="button">
             <span class="mode-kicker">Next step</span>
             <strong>Hear the word</strong>
-            <span>Cassy hears a word. Tap the matching printed word.</span>
+            <span>Cassy hears a word. Tap a printed word, then tap That's the one!</span>
           </button>
         </div>
 
@@ -109,7 +130,7 @@
           </div>
         </header>
 
-        <p class="coach" id="coach">Tap a friend to hear a word.</p>
+        <p class="coach" id="coach">Tap a friend to hear. Then tap That's the one!</p>
 
         <div class="stage">
           <div class="sign-row">
@@ -123,6 +144,7 @@
           </div>
 
           <div class="choices" id="choices"></div>
+          <button id="btn-confirm" class="btn confirm" type="button" disabled>That's the one!</button>
         </div>
 
         <div class="mastery" id="mastery"></div>
@@ -139,6 +161,6 @@
       </div>
     </div>
 
-    <script src="game.js"></script>
+    <script src="game.js?v=16"></script>
   </body>
 </html>

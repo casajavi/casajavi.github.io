@@ -1,4 +1,4 @@
-const WORDS = ["and", "he", "be", "I", "as", "at", "are"];
+const WORDS = ["and", "they", "that", "I", "he", "at", "are", "be", "as", "this", "his", "have"];
 
 function wordSlug(word) {
   return word === "I" ? "i" : word;
@@ -24,6 +24,13 @@ const LINE_CLIPS = {
   "A snuggly toy for Cassy!": "audio/reward-toy.mp3",
   "A leash for the puppy!": "audio/reward-leash.mp3",
   "Butterflies!": "audio/reward-butterflies.mp3",
+  "Sparkly boots for Cassy!": "audio/reward-boots.mp3",
+  "Fairy wings!": "audio/reward-wings.mp3",
+  "A kitten friend!": "audio/reward-kitten.mp3",
+  "Party balloons!": "audio/reward-balloons.mp3",
+  "Shooting stars!": "audio/reward-stars.mp3",
+  "A magical unicorn!": "audio/reward-unicorn.mp3",
+  "A castle!": "audio/reward-castle.mp3",
   "Cassy knows all her words!": "audio/complete.mp3",
 };
 
@@ -54,6 +61,13 @@ const EMPTY_GEAR = {
   trail: false,
   butterflies: false,
   dragon: false,
+  boots: false,
+  wings: false,
+  kitten: false,
+  balloons: false,
+  stars: false,
+  unicorn: false,
+  castle: false,
 };
 
 const STREAK_REWARDS = {
@@ -129,11 +143,53 @@ const STREAK_REWARDS = {
     title: "Butterflies!",
     body: "Pretty butterflies are dancing in the sky!",
   },
+  13: {
+    gear: "boots",
+    kicker: "Stomp stomp!",
+    title: "Sparkly boots for Cassy!",
+    body: "Rainbow boots for stomping around!",
+  },
   15: {
     gear: "dragon",
     kicker: "Look up!",
     title: "A dragon is flying around!",
     body: "A sparkly dragon is looping through the sky!",
+  },
+  16: {
+    gear: "wings",
+    kicker: "Fly!",
+    title: "Fairy wings!",
+    body: "Cassy can flutter like a fairy!",
+  },
+  17: {
+    gear: "kitten",
+    kicker: "Meow!",
+    title: "A kitten friend!",
+    body: "A tiny kitten wants to play too!",
+  },
+  18: {
+    gear: "balloons",
+    kicker: "Party time!",
+    title: "Party balloons!",
+    body: "Tap the balloons. They bounce!",
+  },
+  20: {
+    gear: "stars",
+    kicker: "Make a wish!",
+    title: "Shooting stars!",
+    body: "Stars are streaking across the sky!",
+  },
+  22: {
+    gear: "unicorn",
+    kicker: "Magic!",
+    title: "A magical unicorn!",
+    body: "A unicorn is galloping through the clouds!",
+  },
+  25: {
+    gear: "castle",
+    kicker: "Once upon a time!",
+    title: "A castle!",
+    body: "Cassy's word world got a castle!",
   },
 };
 
@@ -166,6 +222,7 @@ const els = {
   best: document.getElementById("best-count"),
   startStats: document.getElementById("start-stats"),
   particles: document.getElementById("particles"),
+  confirm: document.getElementById("btn-confirm"),
 };
 
 const audio = createAudio();
@@ -181,6 +238,7 @@ const state = {
   target: "Are",
   options: [],
   heard: null,
+  selected: null,
   busy: false,
   lastTarget: null,
 };
@@ -243,8 +301,15 @@ els.overlayBtn.addEventListener("click", () => {
   nextRound();
 });
 
+els.confirm.addEventListener("click", () => {
+  audio.tap();
+  confirmChoice();
+});
+
 document.addEventListener("click", (event) => {
-  const toy = event.target.closest(".squishy, .needoh, .pet-dog, .sky-dragon, .butterfly, .held-toy");
+  const toy = event.target.closest(
+    ".squishy, .needoh, .pet-dog, .pet-kitten, .balloons, .sky-dragon, .sky-unicorn, .sky-castle, .butterfly, .held-toy"
+  );
   if (!toy) return;
   toy.classList.remove("pop");
   void toy.offsetWidth;
@@ -255,6 +320,7 @@ document.addEventListener("click", (event) => {
 function startGame() {
   state.streak = 0;
   state.heard = null;
+  state.selected = null;
   els.start.classList.add("hidden");
   els.game.classList.remove("hidden");
   renderCassy(els.gameCassy, "wave");
@@ -288,6 +354,8 @@ function renderStart() {
 function nextRound(first = false) {
   state.busy = false;
   state.heard = null;
+  state.selected = null;
+  setConfirmReady(false);
   state.target = pickTarget();
   state.options = pickOptions(state.target);
   state.lastTarget = state.target;
@@ -297,10 +365,10 @@ function nextRound(first = false) {
   setCassyMood("idle");
 
   if (state.mode === "see") {
-    els.coach.textContent = "Tap a friend to hear a word. Tap again to pick.";
+    els.coach.textContent = "Tap a friend to hear. Then tap That's the one!";
     if (!first) speak("Look at the word.");
   } else {
-    els.coach.textContent = "Listen. Then tap the matching word.";
+    els.coach.textContent = "Tap a word to hear it. Then tap That's the one!";
     if (!first) speakTarget();
   }
 }
@@ -339,7 +407,7 @@ function renderRound() {
       printed.textContent = word;
       const hint = document.createElement("span");
       hint.className = "hint";
-      hint.textContent = "Tap this word";
+      hint.textContent = "Tap to hear";
       button.append(printed, hint);
     }
 
@@ -352,33 +420,44 @@ function onChoice(button, word, friend) {
   if (state.busy) return;
   if (speech.promptPlaying && state.mode === "hear") return;
 
+  state.selected = word;
+  state.heard = word;
+  clearChoiceStyles();
+  button.classList.add("listening");
+  setConfirmReady(true);
+
   if (state.mode === "see") {
     const avatar = button.querySelector(".avatar");
-    const now = Date.now();
-    const isNewHear = state.heard !== word || now - (state.heardAt || 0) > 2500;
-    if (isNewHear || now - (state.heardAt || 0) < 400 || speech.promptPlaying) {
-      state.heard = word;
-      state.heardAt = now;
-      clearChoiceStyles();
-      button.classList.add("listening");
-      avatar?.classList.add("talk");
-      els.coach.textContent = `That's ${friend.name}. Tap again if this is ${state.target}.`;
-      speak(word, "choice");
-      window.setTimeout(() => avatar?.classList.remove("talk"), 700);
-      return;
-    }
+    avatar?.classList.add("talk");
+    els.coach.textContent = `That's ${friend.name}. Tap That's the one! if this is ${state.target}.`;
+    speak(word, "choice");
+    window.setTimeout(() => avatar?.classList.remove("talk"), 700);
+    return;
   }
 
-  state.busy = true;
-  clearChoiceStyles();
+  els.coach.textContent = `You tapped ${word}. Tap That's the one! if this matches.`;
+  speak(word, "choice");
+}
 
+function confirmChoice() {
+  if (state.busy || !state.selected) return;
+  const word = state.selected;
+  const button = els.choices.querySelector(`.choice[data-word="${word}"]`);
+  state.busy = true;
+  setConfirmReady(false);
+  clearChoiceStyles();
   if (word === state.target) {
-    button.classList.add("correct");
+    button?.classList.add("correct");
     handleCorrect();
   } else {
-    button.classList.add("wrong");
+    button?.classList.add("wrong");
     handleWrong(word);
   }
+}
+
+function setConfirmReady(ready) {
+  els.confirm.disabled = !ready;
+  els.confirm.classList.toggle("ready", ready);
 }
 
 function handleCorrect() {
@@ -435,6 +514,8 @@ function handleWrong(word) {
     () => {
       state.busy = false;
       state.heard = null;
+      state.selected = null;
+      setConfirmReady(false);
       clearChoiceStyles();
       setCassyMood("idle");
       if (state.mode === "hear") speakTarget();
@@ -444,7 +525,7 @@ function handleWrong(word) {
 
 function replayPrompt() {
   if (state.mode === "see") {
-    els.coach.textContent = "Look at the word, then tap a friend.";
+    els.coach.textContent = "Look at the word. Tap a friend to hear. Then tap That's the one!";
     speak("Look at the big word, then tap a friend.");
   } else {
     speakTarget();
@@ -476,6 +557,8 @@ function pickOptions(target) {
 }
 
 function streakMessage() {
+  if (state.streak >= 25) return `Castle streak! ${state.streak} in a row!`;
+  if (state.streak >= 22) return `Unicorn magic! ${state.streak} in a row!`;
   if (state.streak >= 15) return `Dragon streak! ${state.streak} in a row!`;
   if (state.streak >= 10) return `Puppy party! Streak ${state.streak}!`;
   if (state.streak >= 8) return `Cassy is a word queen! Streak ${state.streak}!`;
@@ -536,6 +619,8 @@ function renderCassy(mount, mood) {
     state.gear.crown ? "has-crown" : "",
     state.gear.trail ? "has-trail" : "",
     state.gear.toy ? "has-toy" : "",
+    state.gear.boots ? "has-boots" : "",
+    state.gear.wings ? "has-wings" : "",
     mood,
   ]
     .filter(Boolean)
@@ -550,6 +635,8 @@ function renderCassy(mount, mood) {
       ${state.gear.dog && state.gear.leash ? `<span class="leash"></span>` : ""}
       ${avatarMarkup("cassy", "", gear)}
       ${state.gear.dog ? dogMarkup() : ""}
+      ${state.gear.kitten ? kittenMarkup() : ""}
+      ${state.gear.balloons ? balloonsMarkup() : ""}
       ${toyPileMarkup()}
     </div>
   `;
@@ -607,19 +694,57 @@ function dogMarkup() {
   `;
 }
 
+function kittenMarkup() {
+  return `
+    <button class="pet-kitten" type="button" aria-label="Kitten">
+      <span class="kit-ear left"></span>
+      <span class="kit-ear right"></span>
+      <span class="kit-head">
+        <span class="kit-eye left"></span>
+        <span class="kit-eye right"></span>
+        <span class="kit-nose"></span>
+      </span>
+      <span class="kit-body"></span>
+      <span class="kit-tail"></span>
+    </button>
+  `;
+}
+
+function balloonsMarkup() {
+  return `
+    <button class="balloons" type="button" aria-label="Balloons">
+      <span class="balloon pink"></span>
+      <span class="balloon gold"></span>
+      <span class="balloon blue"></span>
+    </button>
+  `;
+}
+
 function syncFunLayer() {
   const layer = document.getElementById("fun-layer");
   if (!layer) return;
-  const show = state.gear.dragon || state.gear.butterflies;
+  const show =
+    state.gear.dragon ||
+    state.gear.butterflies ||
+    state.gear.stars ||
+    state.gear.unicorn ||
+    state.gear.castle;
   layer.classList.toggle("hidden", !show);
   layer.classList.toggle("has-dragon", Boolean(state.gear.dragon));
   layer.classList.toggle("has-butterflies", Boolean(state.gear.butterflies));
+  layer.classList.toggle("has-stars", Boolean(state.gear.stars));
+  layer.classList.toggle("has-unicorn", Boolean(state.gear.unicorn));
+  layer.classList.toggle("has-castle", Boolean(state.gear.castle));
 }
 
 function avatarMarkup(kind, size = "", extra = "") {
   return `
     <div class="avatar ${kind} ${size} ${extra}">
       <div class="cape"></div>
+      <div class="wings">
+        <span class="wing left"></span>
+        <span class="wing right"></span>
+      </div>
       <div class="trail"></div>
       <div class="pigtail left"></div>
       <div class="pigtail right"></div>
@@ -641,8 +766,8 @@ function avatarMarkup(kind, size = "", extra = "") {
         <span class="dress-bow"></span>
         <span class="dress-sparkle"></span>
       </div>
-      <div class="leg left"></div>
-      <div class="leg right"></div>
+      <div class="leg left"><span class="boot"></span></div>
+      <div class="leg right"><span class="boot"></span></div>
       <div class="head">
         <div class="eye left"></div>
         <div class="eye right"></div>
@@ -771,13 +896,14 @@ function loadProgress() {
     state.coins = saved.coins || 0;
     state.best = saved.best || 0;
     state.gear = { ...EMPTY_GEAR, ...saved.gear };
-    state.celebratedAll = Boolean(saved.celebratedAll);
     const stars = { ...state.stars };
     Object.entries(saved.stars || {}).forEach(([word, count]) => {
       const key = word === "I" || word === "i" ? "I" : word.toLowerCase();
       if (key in stars) stars[key] = count;
     });
     state.stars = stars;
+    state.celebratedAll =
+      Boolean(saved.celebratedAll) && WORDS.every((word) => (state.stars[word] || 0) >= 3);
   } catch {
     /* ignore bad save data */
   }
