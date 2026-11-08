@@ -795,7 +795,7 @@ const speech = {
 
 const voicePlayer = new Audio();
 
-const ASSET_V = "19";
+const ASSET_V = "20";
 
 function clipFor(text) {
   const src = WORDS.includes(text) ? `audio/word-${wordSlug(text)}.mp3` : LINE_CLIPS[text] || null;
