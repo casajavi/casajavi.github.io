@@ -1,0 +1,90 @@
+{
+  "sounds": [
+    {
+      "id": "th",
+      "mark": "th",
+      "title": "The buzzy th",
+      "emoji": "👅",
+      "text": "When T and H stand together, they make a brand new sound. Stick the tip of your tongue out between your teeth, and gently buzz. You hear it in the, that, this, they, and there.",
+      "words": ["that", "this", "they"]
+    },
+    {
+      "id": "h",
+      "mark": "h",
+      "title": "The puffy h",
+      "emoji": "🌬️",
+      "text": "H is a little puff of air, like when you fog up a window. You hear it at the start of he, his, and have.",
+      "words": ["he", "his", "have"]
+    },
+    {
+      "id": "quiet-e",
+      "mark": "quiet",
+      "title": "The sneaky quiet e",
+      "emoji": "🤫",
+      "text": "Sometimes an e sits at the end of a word and makes no sound at all. Shh! Like in are and have.",
+      "words": ["are", "have"]
+    }
+  ],
+  "words": {
+    "and": {
+      "parts": [["and"]],
+      "tip": "And starts like apple. Then finish with n and d.",
+      "example": "Cassy and her puppy."
+    },
+    "they": {
+      "parts": [["th", "th"], ["ey"]],
+      "tip": "Buzzy T H! Tongue between your teeth and buzz. The e y says ay, like in play.",
+      "example": "They are my friends."
+    },
+    "that": {
+      "parts": [["th", "th"], ["at"]],
+      "tip": "Buzzy T H! Tongue between your teeth and buzz, then say at.",
+      "example": "That is my dragon."
+    },
+    "I": {
+      "parts": [["I"]],
+      "tip": "I is just one letter, and it says its own name. It is always a big capital letter.",
+      "example": "I love to read."
+    },
+    "he": {
+      "parts": [["h", "h"], ["e"]],
+      "tip": "Start with a puff of air for h. Then e says its own name.",
+      "example": "He has a puppy."
+    },
+    "at": {
+      "parts": [["at"]],
+      "tip": "At starts like apple, then a quick t at the end.",
+      "example": "Look at the unicorn."
+    },
+    "are": {
+      "parts": [["ar"], ["e", "quiet"]],
+      "tip": "Are is a tricky word. It sounds just like the letter R. The e at the end stays quiet.",
+      "example": "We are reading."
+    },
+    "be": {
+      "parts": [["be"]],
+      "tip": "Press your lips together and pop them for b. Then e says its own name.",
+      "example": "Be kind."
+    },
+    "as": {
+      "parts": [["as"]],
+      "tip": "As starts like apple. The s at the end buzzes like a bee.",
+      "example": "As fast as a dragon."
+    },
+    "this": {
+      "parts": [["th", "th"], ["is"]],
+      "tip": "Buzzy T H! Tongue between your teeth and buzz, then say is.",
+      "example": "This is my squishy."
+    },
+    "his": {
+      "parts": [["h", "h"], ["is"]],
+      "tip": "His sounds like is, with a little puff of air at the start. The s buzzes like a bee.",
+      "example": "That is his dog."
+    },
+    "have": {
+      "parts": [["h", "h"], ["av"], ["e", "quiet"]],
+      "tip": "Puff of air for h, then a like apple. Bite your lip and buzz for v. The e stays quiet.",
+      "example": "I have a kitten."
+    }
+  }
+}

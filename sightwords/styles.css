@@ -2118,9 +2118,196 @@ h1 {
   display: none;
 }
 
+.btn.words {
+  display: block;
+  margin: 18px auto 0;
+  background: #4f7cff;
+  box-shadow: 0 8px 0 #2f55c9;
+  font-size: 22px;
+  padding: 12px 24px;
+}
+
+.btn.words:active {
+  transform: translateY(4px);
+  box-shadow: 0 4px 0 #2f55c9;
+}
+
+.words-screen {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 24px;
+}
+
+.words-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(22, 50, 79, 0.88);
+  color: #fff;
+  border-radius: 20px;
+  padding: 8px 10px;
+  box-shadow: var(--shadow);
+}
+
+.words-head h2 {
+  margin: 0;
+  font-family: "Fredoka", sans-serif;
+  font-size: 28px;
+}
+
+.words-section {
+  margin: 8px 4px 0;
+  font-family: "Fredoka", sans-serif;
+  font-size: 24px;
+  color: #fff;
+  text-shadow: 0 3px 0 #0b6cbc;
+}
+
+.sound-cards,
+.word-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.sound-card,
+.word-card {
+  background: #fff;
+  border: 4px solid #16324f;
+  border-radius: 22px;
+  box-shadow: 0 8px 0 #0c2236;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--ink);
+}
+
+.sound-card strong {
+  font-family: "Fredoka", sans-serif;
+  font-size: 20px;
+}
+
+.sound-card p,
+.word-tip {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.4;
+  font-weight: 700;
+}
+
+.sound-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sound-emoji {
+  font-size: 34px;
+}
+
+.sound-letters {
+  font-family: var(--word-font);
+  font-size: 44px;
+  font-weight: 700;
+}
+
+.sound-words {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.mini-word {
+  font-family: var(--word-font);
+  font-size: 22px;
+  font-weight: 700;
+  color: #111;
+  background: #f1f6fb;
+  border: 3px solid #16324f;
+  border-radius: 12px;
+  padding: 4px 10px;
+}
+
+.word-say {
+  appearance: none;
+  border: 0;
+  background: #fff8dc;
+  border-radius: 16px;
+  padding: 10px 6px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  color: #111;
+}
+
+.word-big {
+  font-family: var(--word-font);
+  font-size: clamp(52px, 9vw, 72px);
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.word-stars {
+  color: #e0a400;
+  font-size: 18px;
+}
+
+.word-example {
+  margin: 0;
+  font-size: 15px;
+  font-style: italic;
+  color: #3b5674;
+}
+
+.tip-btn {
+  margin-top: auto;
+  align-self: flex-start;
+  border: 0;
+  border-radius: 12px;
+  background: #16324f;
+  color: #fff;
+  font-weight: 800;
+  font-size: 16px;
+  padding: 8px 14px;
+}
+
+.mark-th {
+  color: #8a3dff;
+  text-decoration: underline 4px #c9a5ff;
+  text-underline-offset: 6px;
+}
+
+.mark-h {
+  color: #0a8fd8;
+  text-decoration: underline 4px #9fdcff;
+  text-underline-offset: 6px;
+}
+
+.mark-quiet {
+  color: #b4c0cc;
+}
+
+.speaking {
+  outline: 4px solid #00b06f;
+  outline-offset: 2px;
+}
+
+.word-say.speaking,
+.mini-word.speaking {
+  background: #e8fff4;
+}
+
 @media (max-width: 700px) {
   .mode-pick {
     grid-template-columns: 1fr;
+  }
+
+  .sound-cards,
+  .word-cards {
+    grid-template-columns: 1fr 1fr;
   }
 
   .sign-row {
@@ -2154,5 +2341,9 @@ h1 {
 
   .choice .hint {
     font-size: 12px;
+  }
+
+  .sound-cards {
+    grid-template-columns: 1fr;
   }
 }

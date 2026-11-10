@@ -223,7 +223,14 @@ const els = {
   startStats: document.getElementById("start-stats"),
   particles: document.getElementById("particles"),
   confirm: document.getElementById("btn-confirm"),
+  words: document.getElementById("screen-words"),
+  wordsBtn: document.getElementById("btn-words"),
+  wordsHome: document.getElementById("btn-words-home"),
+  soundCards: document.getElementById("sound-cards"),
+  wordCards: document.getElementById("word-cards"),
 };
+
+let guide = { sounds: [], words: {} };
 
 const audio = createAudio();
 
@@ -267,6 +274,26 @@ els.play.addEventListener("click", () => {
 els.home.addEventListener("click", () => {
   audio.tap();
   showStart();
+});
+
+els.wordsBtn.addEventListener("click", () => {
+  audio.unlock();
+  unlockVoice();
+  audio.tap();
+  showWords();
+});
+
+els.wordsHome.addEventListener("click", () => {
+  audio.tap();
+  showStart();
+});
+
+els.words.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-say]");
+  if (!button) return;
+  els.words.querySelectorAll(".speaking").forEach((el) => el.classList.remove("speaking"));
+  button.classList.add("speaking");
+  speak(button.dataset.say).then(() => button.classList.remove("speaking"));
 });
 
 els.reset.addEventListener("click", () => {
@@ -339,9 +366,82 @@ function startGame() {
 function showStart() {
   stopSpeech();
   els.game.classList.add("hidden");
+  els.words.classList.add("hidden");
   els.overlay.classList.add("hidden");
   els.start.classList.remove("hidden");
   renderStart();
+}
+
+function showWords() {
+  stopSpeech();
+  els.start.classList.add("hidden");
+  els.words.classList.remove("hidden");
+  renderWords();
+  window.scrollTo(0, 0);
+}
+
+function renderWords() {
+  els.soundCards.innerHTML = guide.sounds
+    .map(
+      (sound) => `
+        <div class="sound-card">
+          <div class="sound-top">
+            <span class="sound-emoji">${sound.emoji}</span>
+            <span class="sound-letters mark-${sound.mark}">${sound.id === "quiet-e" ? "e" : sound.id}</span>
+          </div>
+          <strong>${sound.title}</strong>
+          <p>${sound.text}</p>
+          <div class="sound-words">
+            ${sound.words.map((word) => `<button class="mini-word" type="button" data-say="${word}">${wordMarkup(word)}</button>`).join("")}
+          </div>
+          <button class="tip-btn" type="button" data-say="sound:${sound.id}">💬 Hear it</button>
+        </div>
+      `
+    )
+    .join("");
+
+  els.wordCards.innerHTML = WORDS.map((word) => {
+    const info = guide.words[word];
+    const stars = "★".repeat(state.stars[word]) + "☆".repeat(3 - state.stars[word]);
+    return `
+      <div class="word-card">
+        <button class="word-say" type="button" data-say="${word}" aria-label="Hear ${word}">
+          <span class="word-big">${wordMarkup(word)}</span>
+          <span class="word-stars">${stars}</span>
+        </button>
+        ${
+          info
+            ? `<p class="word-tip">${info.tip}</p>
+               <p class="word-example">“${info.example}”</p>
+               <button class="tip-btn" type="button" data-say="tip:${word}">💬 Tip</button>`
+            : ""
+        }
+      </div>
+    `;
+  }).join("");
+}
+
+function wordMarkup(word) {
+  const parts = guide.words[word]?.parts || [[word]];
+  return parts
+    .map(([text, mark]) => (mark ? `<span class="mark-${mark}">${text}</span>` : text))
+    .join("");
+}
+
+async function loadGuide() {
+  try {
+    const response = await fetch(`word-guide.json?v=${ASSET_V}`);
+    guide = await response.json();
+  } catch {
+    return;
+  }
+  guide.sounds.forEach((sound) => {
+    LINE_CLIPS[`sound:${sound.id}`] = `audio/sound-${sound.id}.mp3`;
+  });
+  Object.keys(guide.words).forEach((word) => {
+    LINE_CLIPS[`tip:${word}`] = `audio/tip-${wordSlug(word)}.mp3`;
+  });
+  if (!els.words.classList.contains("hidden")) renderWords();
 }
 
 function renderStart() {
@@ -795,7 +895,7 @@ const speech = {
 
 const voicePlayer = new Audio();
 
-const ASSET_V = "20";
+const ASSET_V = "21";
 
 function clipFor(text) {
   const src = WORDS.includes(text) ? `audio/word-${wordSlug(text)}.mp3` : LINE_CLIPS[text] || null;
@@ -960,3 +1060,4 @@ function createAudio() {
 }
 
 els.hello.textContent = "Hi Cassy! Let's play with words.";
+loadGuide();
